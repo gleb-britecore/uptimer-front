@@ -20,6 +20,33 @@
                 </template>
             </el-table-column>
             <el-table-column
+                    prop="status"
+                    label="Status"
+                    width="100">
+                <template slot-scope="scope">
+                    <el-tag
+                            style="min-width: 100px; text-align: center;"
+                            class="u-text--center"
+                            :type="buildLabelColor(scope.row)"
+                            close-transition>{{scope.row.status}}</el-tag>
+
+                </template>
+            </el-table-column>
+
+
+            <el-table-column
+                    prop="site_url"
+                    label="Site Url"
+            >
+            </el-table-column>
+
+
+            <el-table-column
+                    prop="status_code"
+                    label="Status Code"
+            >
+            </el-table-column>
+            <el-table-column
                     label="Operations"
                     width="180">
                 <template slot-scope="scope">
@@ -28,36 +55,6 @@
                     </el-button>
                 </template>
             </el-table-column>
-            <el-table-column
-                    prop="site_url"
-                    label="Site Url"
-            >
-            </el-table-column>
-
-            <el-table-column
-                    prop="status"
-                    label="Status"
-                    width="180">
-            </el-table-column>
-            <el-table-column
-                    prop="status_code"
-                    label="Status Code"
-            >
-            </el-table-column>
-            <el-table-column
-                    prop="status"
-                    label="Status"
-                    width="180">
-                <template slot-scope="scope">
-                    <el-tag
-                            style="min-width: 100px;"
-                            class="u-text--center"
-                            :type="buildLabelColor(scope.row)"
-                            close-transition>{{scope.row.status}}</el-tag>
-
-                </template>
-            </el-table-column>
-
         </el-table>
     </div>
 </template>
@@ -119,6 +116,7 @@
         this.loadAllSites()
       },
       clear() {
+
         this.newUrl = ''
       },
       async loadAllSites () {
@@ -133,6 +131,11 @@
           this.loading = false
         }
 
+
+      },
+      async refresh_site(site) {
+        let response = await axios.patch(site.url)
+        this.loadAllSites()
 
       },
     },
