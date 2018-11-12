@@ -12,6 +12,7 @@ Vue.use(require('vue-moment'));
 import VueTimers from 'vue-timers'
 Vue.use(VueTimers)
 
+import './axios.interceptors'
 
 new Vue({
   router,

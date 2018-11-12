@@ -62,6 +62,9 @@
                 </template>
             </el-table-column>
         </el-table>
+
+        <div></div>
+        <h4>You will need to use our mobile application to sign up for push notifications</h4>
     </div>
 </template>
 
