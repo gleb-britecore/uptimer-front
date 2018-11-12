@@ -1,7 +1,7 @@
 <template>
     <div class="sites-root">
 
-        <H1>Sites2</H1>
+        <H1>Sites</H1>
 
 
         <el-input placeholder="Site Url" v-model="newUrl"></el-input>
@@ -14,15 +14,16 @@
                     label="Operations"
                     width="180">
                 <template slot-scope="scope">
-                    <el-button @click="refresh_site(scope.row)">
+                    <el-button v-loading="scope.row.update_pending" @click="refresh_site(scope.row)">
                         Refresh Status
                     </el-button>
                 </template>
             </el-table-column>
+
             <el-table-column
                     prop="status"
                     label="Status"
-                    width="100">
+                    width="120">
                 <template slot-scope="scope">
                     <el-tag
                             style="min-width: 100px; text-align: center;"
@@ -42,9 +43,14 @@
 
 
             <el-table-column
-                    prop="status_code"
-                    label="Status Code"
+                    label="Last Checked"
+
             >
+            <template slot-scope="scope">
+                <span>
+                    {{scope.row.last_check_at | moment("from", "now")}}
+                </span>
+            </template>
             </el-table-column>
             <el-table-column
                     label="Operations"
@@ -64,7 +70,9 @@
   /* eslint-disable */
   export default {
     name: "sites.page",
-
+    timers: {
+      reload_timer: { time: 5000, autostart: false, repeat: true }
+    },
     data() {
       this.loadAllSites()
       return {
@@ -81,6 +89,19 @@
 
     },
     methods: {
+    reload_timer() {
+        console.log('timer enter')
+        this.loadAllSites()
+          if (!this.all.some(_ => _.update_pending)){
+            console.log('asdasd')
+            this.$timer.stop('reload_timer')
+          } else {
+            console.log('ffdfdfdf')
+
+            this.$timer.start('reload_timer')
+
+          }
+      },
       buildLabelColor (build) {
         if (!build || !build.status) {
           return 'primary'
@@ -90,11 +111,11 @@
           return 'primary'
         }
 
-        if (statusNormalized === 'succeeded') {
+        if (statusNormalized === '200') {
           return 'success'
         }
 
-        if (statusNormalized === 'fail') {
+        if (statusNormalized === 'down') {
           return 'danger'
         }
 
@@ -134,9 +155,9 @@
 
       },
       async refresh_site(site) {
+        site.update_pending = true
         let response = await axios.patch(site.url)
-        this.loadAllSites()
-
+        this.$timer.start('reload_timer')
       },
     },
   }
