@@ -66,9 +66,9 @@
 </template>
 
 <script>
-  let base_url = 'http://192.168.99.101:30636'
 
   import axios from 'axios';
+  import config from '../config';
   /* eslint-disable */
   export default {
     name: "sites.page",
@@ -125,7 +125,7 @@
       },
       async addSite() {
         this.all.push({site_url: this.newUrl})
-        let a = await axios.post(base_url + '/sites/', {site_url: this.newUrl})
+        let a = await axios.post(config.url + '/sites/', {site_url: this.newUrl})
         this.loadAllSites()
 
         console.log('asdasd', a.data)
@@ -146,7 +146,7 @@
         this.loading = true
 
         try {
-          let response = await axios.get(base_url + '/sites/')
+          let response = await axios.get(config.url + '/sites/')
           this.all = response.data
           console.log(response)
         } catch (e) {
